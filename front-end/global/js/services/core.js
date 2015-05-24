@@ -9,12 +9,19 @@
     function core(requester, waysKnower) {
 
         var API = {
-           
+           updateUser: updateUser
         };
-        
-        setThemesList(waysKnower.topicsMap);
-        
 
         return API;
+
+
+        function updateUser(params, onSuccess){
+            requester.post(waysKnower.updateUser, params)
+                .then(onSuccess, onError);
+        }
+
+        function onError(msg){
+            console.log('req errored:', msg);
+        }
     }
 })();
