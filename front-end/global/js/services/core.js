@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('dashboard')
+    angular.module('todoList')
         .factory('core', core);
 
     core.$inject = ['requester',  'waysKnower'];

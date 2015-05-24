@@ -1,16 +1,5 @@
 angular.module('todoList', ['ionic'])
 
-.run(function($ionicPlatform) {
-  $ionicPlatform.ready(function() {
-    if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-    }
-    if (window.StatusBar) {
-      StatusBar.styleLightContent();
-    }
-  });
-})
-
 .config(function($stateProvider, $urlRouterProvider) {
 
   $stateProvider
@@ -18,16 +7,18 @@ angular.module('todoList', ['ionic'])
   .state('tab', {
     url: "/tab",
     abstract: true,
-    templateUrl: "templates/tabs.html"
+    templateUrl: "views/tabs/tabs.html",
+    controller: "MainCtrl",
+    controllerAs: 'main'
   })
 
 
   .state('tab.lists', {
     url: '/lists',
     views: {
-      'tab-dash': {
-        templateUrl: 'templates/list.html',
-        controller: 'ListCtrl',
+      'lists': {
+        templateUrl: 'views/lists/lists.html',
+        controller: 'ListsCtrl',
         controllerAs: 'vm'
       }
     }
@@ -36,8 +27,8 @@ angular.module('todoList', ['ionic'])
   .state('tab.todo', {
       url: '/todo',
       views: {
-        'tab-chats': {
-          templateUrl: 'templates/todo.html',
+        'todo': {
+          templateUrl: 'views/todo/todo.html',
           controller: 'TodoCtrl',
           controllerAs: 'vm'
         }
@@ -47,8 +38,8 @@ angular.module('todoList', ['ionic'])
   .state('tab.users', {
     url: '/users',
     views: {
-      'tab-chats': {
-        templateUrl: 'templates/users.html',
+      'users': {
+        templateUrl: 'views/users/users.html',
         controller: 'UsersCtrl',
         controllerAs: 'vm'
       }
@@ -57,4 +48,15 @@ angular.module('todoList', ['ionic'])
 
 
   $urlRouterProvider.otherwise('/tab/todo');
+})
+
+.run(function($ionicPlatform) {
+  $ionicPlatform.ready(function() {
+    if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+    }
+    if (window.StatusBar) {
+      StatusBar.styleLightContent();
+    }
+  });
 });

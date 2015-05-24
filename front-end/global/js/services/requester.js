@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('global')
+    angular.module('todoList')
         .provider('requester', requester);
 
     requester.$inject = [];
