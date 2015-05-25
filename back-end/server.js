@@ -31,8 +31,12 @@
 	core.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 	  extended: true
 	})); 
-
-
+	/*
+	core.all('*', function (req, res, next) {
+	  console.log('Accessing', req.headers, req.body, req.params);
+	  next(); // pass control to the next handler
+	});
+	*/
 	var listAPI = require('./api/list')(core, db);
 	var userAPI = require('./api/user')(core, db);
 })();

@@ -9,7 +9,12 @@
 
 	connection.connect();
 
-	module.exports.db = connection;
+	connection.query("USE todo;", function(err){
+		if (err) throw err;
+		console.log('db connection success');
+	});
+
+	module.exports = connection;
 })();
 
 
