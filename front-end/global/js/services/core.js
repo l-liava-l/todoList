@@ -10,11 +10,16 @@
 
         var API = {
            updateUser: updateUser,
-           createList: createList
+           createList: createList,
+           getLists: getLists
         };
 
         return API;
 
+        function getLists(params, onSuccess){
+            requester.post(waysKnower.getLists, params)
+                .then(onSuccess, onError);
+        }
 
         function updateUser(params, onSuccess){
             API.user = params;

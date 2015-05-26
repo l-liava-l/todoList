@@ -59,7 +59,7 @@ gulp.task('git-check', function(done) {
         'fs', 'path', 'gulp', 'gulp-csso', 'gulp-uglify','color', 
         'gulp-concat', 'gulp-less', 'gulp-bower', 'gulp-watch', 
         'main-bower-files', 'karma', 'child_process', 'gulp-rename',
-        'gulp-html-tag-include', 'gulp-babel', 'gulp-sourcemaps', 'yargs'
+        'gulp-html-tag-include', 'gulp-babel', 'gulp-sourcemaps', 'yargs', 'gulp-server-livereload'
     ];
 
     dependens.forEach(function(name) {
@@ -83,11 +83,14 @@ gulp.task('git-check', function(done) {
     function gulpBuild(){
         var w = yargs.argv ? 'w' in yargs.argv : null;
         var min = yargs.argv ? 'm' in yargs.argv : null;
+        var s = yargs.argv ? 's' in yargs.argv : null;
 
         if(w){
             console.log(('           Watching mode').bold.yellow);
             console.log('-----------------------------------------');
         }
+
+        if(s){server()}  
 
         for(var id in modules){
             js(modules[id]);
@@ -96,6 +99,18 @@ gulp.task('git-check', function(done) {
 
             if(w){watch(modules[id]);}
         }
+
+        function server(){
+            gulp.src('.')
+                .pipe(global['server-livereload']({
+                      livereload: true,
+                      directoryListing: true,
+                      defaultFile: 'index.html',
+                      open: true,
+                      port: 3333
+                }))
+        }
+        
 
         function watch(module){
             var src = path.dev + '/front-end/'+ module +'*(components|js|views)/**';
