@@ -18,7 +18,7 @@
 			familyName: "legkodymov",
 			imageUrl: "http://imageUrl"
 		});
-
+		
 		function updateUser(obj){
 			main.user = obj;
 			core.updateUser(obj);

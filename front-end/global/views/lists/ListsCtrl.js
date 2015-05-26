@@ -6,31 +6,38 @@
 
 	function ListsCtrl($scope, core){
 		var vm = this;
+	
+		vm.createList = createList;
+		vm.setList = setList;
 
-		/*
-		createList({
-			title: 'Tommorow',
-			email: core.user.email
-		});
-		*/
-		getLists({
-			email: core.user.email
-		});
+		getLists();
+		
+		console.log('ListsCtrl', $scope); 
 
 		function getLists(params){
+			var params = {
+				email: core.user.email
+			};
+
 			core.getLists(params, onSuccess);
 
 			function onSuccess(data){
-				console.log(data);
 				vm.lists = data;
 			}
 		}
 
-		function createList(params){
-			core.createList(params, onSuccess);
+		function setList(list){
+			$scope.main.list = list;
+		}
+
+		function createList(title){
+			core.createList({
+				title: title,
+				email: core.user.email
+			}, onSuccess);
 
 			function onSuccess(data){
-				console.log(data);
+				getLists();
 			}
 		}
 	}

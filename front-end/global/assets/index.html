@@ -24,19 +24,11 @@
 
   </head>
   <body ng-controller="MainCtrl as main">
-    <!--
-      The nav bar that will be updated as we navigate between views.
-    -->
-   
-    <ion-nav-bar class="bar-calm">
-      <ion-nav-back-button>
-      </ion-nav-back-button>
-    </ion-nav-bar>
-    <!--
-      The views will be rendered in the <ion-nav-view> directive below
-      Templates are in the /templates folder (but you could also
-      have templates inline in this html file if you'd like).
-    -->
-    <ion-nav-view></ion-nav-view>
+    <div class="bar bar-header">
+      <button class="button button-icon icon ion-navicon" ui-sref="lists"></button>
+      <button class="button button-clear button-positive" ui-sref="todo">todo</button>
+      <div class="h1 title">Header Buttons</div>
+    </div>
+    <ui-view name="content"></ui-view>
   </body>
 </html>

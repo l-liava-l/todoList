@@ -1,27 +1,18 @@
+<div class="bar bar-header item-input-inset">
+  <label class="item-input-wrapper">
+    <i class="icon ion-ios-search placeholder-icon"></i>
+    <input type="List title" ng-model="vm.newListTitle" placeholder="Search">
+  </label>
+  <button class="button button-clear" ng-click="vm.createList(vm.newListTitle)">
+    Add
+  </button>
+</div>
 
-<ion-view view-title="Lists">
+<ion-list can-swipe="true">
+  <ion-item ng-repeat="list in vm.lists track by $index" ng-class="{active: main.list.id == list.id}" class="item-thumbnail-left item" ng-click="vm.setList(list.id)">  
+    <h2 style="padding: 10px;">{{::list.title}}</h2>
+    <ion-option-button class="button-positive" ng-click="share(item)">Share</ion-option-button>
+    <ion-option-button class="button-info" ng-click="edit(item)"> Edit</ion-option-button>
+  </ion-item>
+</ion-list>
 
-    <ion-list show-delete="shouldShowDelete"
-              show-reorder="shouldShowReorder"
-              can-swipe="listCanSwipe">
-
-      <ion-item ng-repeat="list in vm.lists track by $index" class="item-thumbnail-left">
-        <h2>{{list.title}}</h2>
-
-        <ion-option-button class="button-positive" ng-click="share(item)">
-            Share
-        </ion-option-button>
-        <ion-option-button class="button-info" ng-click="edit(item)">
-            Edit
-        </ion-option-button>
-
-        <ion-delete-button class="ion-minus-circled"
-                           ng-click="items.splice($index, 1)">
-        </ion-delete-button>
-
-        <ion-reorder-button class="ion-navicon"
-                            on-reorder="reorderItem(item, $fromIndex, $toIndex)">
-        </ion-reorder-button>
-      </ion-item>  
-    </ion-list>
-</ion-view>

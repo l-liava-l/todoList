@@ -17,7 +17,9 @@
 
 				db.query(insertQuery, function(err, rows, fields) {
 				  if(err){throw err;}
-				  addUser(listId, req.body.email);
+				  addUser(listId, req.body.email, function(){
+				  	res.send(true);
+				  });
 				});
 			}
 		});
@@ -49,13 +51,14 @@
 			}
 		});
 
-		function addUser(listId, email){
+		function addUser(listId, email, callback){
 			var insertQuery = "INSERT INTO `group`(listId, email) " 
 							 + " VALUES ('"+listId+"','"+email+"');";
 
 			db.query(insertQuery, function(err, rows, fields) {
 			  if(err){throw err;}
 			  console.log('group added');
+			  callback();
 			});
 		}
 	}

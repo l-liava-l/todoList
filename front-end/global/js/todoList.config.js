@@ -36,21 +36,14 @@ angular.module('todoList', ['ionic'])
   
   $httpProvider.defaults.transformRequest.unshift(function(params) {
       return angular.isObject(params) ? angular.toQueryString(params) : params;
-  });
+  }); 
 
   $stateProvider
 
-  .state('tab', {
-    url: "/tab",
-    abstract: true,
-    templateUrl: "views/tabs/tabs.html"
-  })
-
-
-  .state('tab.lists', {
+  .state('lists', {
     url: '/lists',
     views: {
-      'lists': {
+      'content': {
         templateUrl: 'views/lists/lists.html',
         controller: 'ListsCtrl',
         controllerAs: 'vm'
@@ -58,10 +51,10 @@ angular.module('todoList', ['ionic'])
     }
   })
 
-  .state('tab.todo', {
+  .state('todo', {
       url: '/todo',
       views: {
-        'todo': {
+        'content': {
           templateUrl: 'views/todo/todo.html',
           controller: 'TodoCtrl',
           controllerAs: 'vm'
@@ -69,10 +62,10 @@ angular.module('todoList', ['ionic'])
       }
     })
 
-  .state('tab.users', {
+  .state('users', {
     url: '/users',
     views: {
-      'users': {
+      'content': {
         templateUrl: 'views/users/users.html',
         controller: 'UsersCtrl',
         controllerAs: 'vm'
@@ -81,7 +74,7 @@ angular.module('todoList', ['ionic'])
   })
 
 
-  $urlRouterProvider.otherwise('/tab/todo');
+  $urlRouterProvider.otherwise('/todo');
 }])
 
 .run(function($ionicPlatform) {
