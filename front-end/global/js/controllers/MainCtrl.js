@@ -9,17 +9,18 @@
 		var main = this;
 
 		document.addEventListener("deviceready", auth, false);
-		/*
+		
+		main.repeat = new Array(50);
+		
 		updateUser({
-			email: "legkodymov.lev@gmail.com1432507194435",
-			givenName: "Lesasas",
-			familyName: "Legkodymo",
+			email: "legkodymov.lev@gmail.com",
+			givenName: "Lev",
+			familyName: "legkodymov",
 			imageUrl: "http://imageUrl"
 		});
-		*/
 
 		function updateUser(obj){
-			console.log('user:', obj);
+			main.user = obj;
 			core.updateUser(obj);
 		}
 

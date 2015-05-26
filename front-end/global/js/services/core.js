@@ -9,14 +9,21 @@
     function core(requester, waysKnower) {
 
         var API = {
-           updateUser: updateUser
+           updateUser: updateUser,
+           createList: createList
         };
 
         return API;
 
 
         function updateUser(params, onSuccess){
+            API.user = params;
             requester.post(waysKnower.updateUser, params)
+                .then(onSuccess, onError);
+        }
+
+        function createList(params, onSuccess){
+            requester.post(waysKnower.createList, params)
                 .then(onSuccess, onError);
         }
 

@@ -43,9 +43,7 @@ angular.module('todoList', ['ionic'])
   .state('tab', {
     url: "/tab",
     abstract: true,
-    templateUrl: "views/tabs/tabs.html",
-    controller: "MainCtrl",
-    controllerAs: 'main'
+    templateUrl: "views/tabs/tabs.html"
   })
 
 

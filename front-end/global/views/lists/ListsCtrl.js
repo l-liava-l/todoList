@@ -2,10 +2,23 @@
 	angular.module('todoList')
 		.controller('ListsCtrl', ListsCtrl);
 
-	ListsCtrl.$inject = ['$scope'];
+	ListsCtrl.$inject = ['$scope', 'core'];
 
-	function ListsCtrl($scope){
+	function ListsCtrl($scope, core){
 		var vm = this;
+
+		createList({
+			title: 'Tommorow',
+			email: core.user.email
+		});
+
+		function createList(params){
+			core.createList(params, onSuccess);
+
+			function onSuccess(data){
+				console.log(data);
+			}
+		}
 	}
 })();
 

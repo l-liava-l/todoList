@@ -8,7 +8,8 @@
 
 	function waysKnower() {
 		var serverAPI = {
-			updateUser: 'http://192.168.0.105:8002/api/user/update'
+			updateUser: 'http://192.168.0.105:8002/api/user/update',
+			createList: 'http://192.168.0.105:8002/api/lists/create'
 		};
 		
 		return { $get: _get }

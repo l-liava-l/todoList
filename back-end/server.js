@@ -37,6 +37,6 @@
 	  next(); // pass control to the next handler
 	});
 	*/
-	var listAPI = require('./api/list')(core, db);
+	var listsAPI = require('./api/lists')(core, db);
 	var userAPI = require('./api/user')(core, db);
 })();
