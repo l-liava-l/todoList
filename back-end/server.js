@@ -39,4 +39,5 @@
 	*/
 	var listsAPI = require('./api/lists')(core, db);
 	var userAPI = require('./api/user')(core, db);
+	var todoAPI = require('./api/todo')(core, db);
 })();

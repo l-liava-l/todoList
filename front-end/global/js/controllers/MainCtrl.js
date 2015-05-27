@@ -3,14 +3,14 @@
 	angular.module('todoList')
 		.controller('MainCtrl', MainCtrl);
 
-	MainCtrl.$inject = ['$scope', 'core'];
+	MainCtrl.$inject = ['$scope', 'core', 'localWriter', '$state', '$timeout'];
 
-	function MainCtrl($scope, core){
+	function MainCtrl($scope, core, localWriter, $state, $timeout){
 		var main = this;
 
+		$scope.main.list = localWriter.get('list');
+		console.log($scope.main.list);
 		document.addEventListener("deviceready", auth, false);
-		
-		main.repeat = new Array(50);
 		
 		updateUser({
 			email: "legkodymov.lev@gmail.com",

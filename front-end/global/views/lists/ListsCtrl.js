@@ -2,32 +2,37 @@
 	angular.module('todoList')
 		.controller('ListsCtrl', ListsCtrl);
 
-	ListsCtrl.$inject = ['$scope', 'core'];
+	ListsCtrl.$inject = ['$scope', 'core', 'localWriter', '$state', '$q'];
 
-	function ListsCtrl($scope, core){
+	function ListsCtrl($scope, core, localWriter, $state, $q){
 		var vm = this;
 	
 		vm.createList = createList;
 		vm.setList = setList;
 
 		getLists();
-		
-		console.log('ListsCtrl', $scope); 
 
 		function getLists(params){
-			var params = {
-				email: core.user.email
-			};
+			return $q(function(resolve, reject){
+				var params = {
+					email: core.user.email
+				};
 
-			core.getLists(params, onSuccess);
+				core.getLists(params, onSuccess);
 
-			function onSuccess(data){
-				vm.lists = data;
-			}
+				function onSuccess(data){
+					vm.lists = data;
+					resolve(data);
+				}
+			});
 		}
 
 		function setList(list){
-			$scope.main.list = list;
+			if(list && list.id){
+				$scope.main.list = list;
+				localWriter.set('list')(list);
+				$state.go('todo');
+			}	
 		}
 
 		function createList(title){
@@ -37,7 +42,7 @@
 			}, onSuccess);
 
 			function onSuccess(data){
-				getLists();
+				setList(data);
 			}
 		}
 	}

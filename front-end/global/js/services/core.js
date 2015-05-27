@@ -4,17 +4,29 @@
     angular.module('todoList')
         .factory('core', core);
 
-    core.$inject = ['requester',  'waysKnower'];
+    core.$inject = ['requester',  'waysKnower', 'localWriter'];
 
-    function core(requester, waysKnower) {
+    function core(requester, waysKnower, localWriter) {
 
         var API = {
            updateUser: updateUser,
            createList: createList,
-           getLists: getLists
+           getLists: getLists,
+           createTodo: createTodo,
+           getTodoListed: getTodoListed
         };
 
         return API;
+
+        function createTodo(params, onSuccess){
+            requester.post(waysKnower.createTodo, params)
+                .then(onSuccess, onError);
+        }
+
+        function getTodoListed(params, onSuccess){
+            requester.post(waysKnower.getTodoListed, params)
+                .then(onSuccess, onError);
+        }
 
         function getLists(params, onSuccess){
             requester.post(waysKnower.getLists, params)

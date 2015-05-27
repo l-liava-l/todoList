@@ -3,13 +3,7 @@
 	
 	function init(core, db){
 		core.post('/api/lists/create', function (req, res){
-			if(req.body.email && req.body.title){ 
-				insert(Date.now()); 
-			} 
-			else{
-				res.send(false)
-				return false
-			}
+			req.body.email && req.body.title ? insert(Date.now()) : res.send(false);
 
 			function insert(listId){
 				var insertQuery = "INSERT INTO `lists`(id, title) " 
@@ -18,18 +12,19 @@
 				db.query(insertQuery, function(err, rows, fields) {
 				  if(err){throw err;}
 				  addUser(listId, req.body.email, function(){
-				  	res.send(true);
+				  	res.send({
+				  		id: listId,
+				  		title: req.body.title
+				  	});
 				  });
 				});
 			}
 		});
 
 		core.post('/api/lists/get', function (req, res){
-			if(req.body.email){ 
-				insert(Date.now()); 
-			} else{res.send(false)}
+			req.body.email ? get() : res.send(false);
 
-			function insert(listId){
+			function get(){
 				var getQuery = "SELECT * FROM `group` WHERE email='"+req.body.email+"';";
 
 				db.query(getQuery, get);

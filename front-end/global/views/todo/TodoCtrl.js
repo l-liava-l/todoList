@@ -2,10 +2,40 @@
 	angular.module('todoList')
 		.controller('TodoCtrl', TodoCtrl);
 
-	TodoCtrl.$inject = ['$scope'];
+	TodoCtrl.$inject = ['$scope', 'core', '$timeout', '$state'];
 
-	function TodoCtrl($scope){
+	function TodoCtrl($scope, core, $timeout, $state){
 		var vm = this;
+
+		vm.createTodo = createTodo;
+
+		if(!$scope.main.list || !$scope.main.list.id){
+			$timeout(()=> $state.go('lists'));
+			return false;
+		}
+
+		getTodoListed()
+
+		function createTodo(text){
+			core.createTodo({
+				text: text,
+				listID: $scope.main.list.id
+			}, onSuccess);
+
+			function onSuccess(data){
+				getTodoListed();
+			}
+		}
+
+		function getTodoListed(){
+			core.getTodoListed({
+				listID: $scope.main.list.id
+			}, onSuccess);
+
+			function onSuccess(data){
+				vm.todoList = data;
+			}
+		}
 
 		$scope.data = {
 			showDelete: false

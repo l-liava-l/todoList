@@ -1,10 +1,29 @@
-<ion-view view-title="Todo">
- <ion-content overflow-scroll="true">
-  <ion-list show-delete="data.showDelete" show-reorder="data.showReorder">
+<div class="bar bar-subheader item-input-inset" style="position: absolute">
+    <label class="item-input-wrapper">
+      <input type="search" ng-model="newTodoText" placeholder="Todo text">
+    </label>
+    <button class="button button-clear" ng-click="vm.createTodo(newTodoText); newTodoText = null">
+      Add
+    </button>
+</div>
 
-    <ion-item ng-repeat="item in main.repeat track by $index">
+
+<ion-content overflow-scroll="true" style="padding-top: 88px">
+  <div class="list">
+    <div class="item item-divider" ng-click="vm.setList(list)"
+         ng-class="{active: main.list.id == list.id}"
+         ng-repeat="todo in vm.todoList track by $index" style="padding: 20px">
+        {{::todo.text}}
+    </div>
+  </div>
+</ion-content>
+
+
+ <!--ion-content overflow-scroll="true">
+  <ion-list show-delete="data.showDelete" show-reorder="data.showReorder">
+    <ion-item ng-repeat="item in vm.todoList track by $index">
       <img ng-src="{{::main.user.imageUrl.split('?sz=50').join('?sz=100')}}" style="border: 2px solid green">
-      <h2>{{::main.user.givenName}} {{::main.user.familyName}}</h2>
+      <h2></h2>
       <ion-delete-button class="ion-minus-circled" 
                          ng-click="onItemDelete(item)">
       </ion-delete-button>
@@ -22,11 +41,9 @@
       </ion-option-button>
       <ion-reorder-button class="ion-navicon" on-reorder="moveItem(item, $fromIndex, $toIndex)"></ion-reorder-button>
     </ion-item>
-
   </ion-list>
 
-</ion-content>
-</ion-view>
+</ion-content-->
 
 
 

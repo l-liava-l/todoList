@@ -27,7 +27,7 @@
     <div class="bar bar-header">
       <button class="button button-icon icon ion-navicon" ui-sref="lists"></button>
       <button class="button button-clear button-positive" ui-sref="todo">todo</button>
-      <div class="h1 title">Header Buttons</div>
+      <div class="h1 title">{{main.list.title || 'Group TODO'}}</div>
     </div>
     <ui-view name="content"></ui-view>
   </body>
