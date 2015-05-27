@@ -9,7 +9,7 @@
 		var main = this;
 
 		$scope.main.list = localWriter.get('list');
-		console.log($scope.main.list);
+
 		document.addEventListener("deviceready", auth, false);
 		
 		updateUser({

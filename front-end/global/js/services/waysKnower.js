@@ -12,7 +12,8 @@
 			createList: 'http://192.168.0.105:8002/api/lists/create',
 			getLists: 'http://192.168.0.105:8002/api/lists/get',
 			createTodo: 'http://192.168.0.105:8002/api/todo/create',
-			getTodoListed: 'http://192.168.0.105:8002/api/todo/get/listed'
+			getTodoListed: 'http://192.168.0.105:8002/api/todo/get/listed',
+			setTodoStatus: 'http://192.168.0.105:8002/api/todo/set/status'
 		};
 		
 		return { $get: _get }
