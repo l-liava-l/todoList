@@ -1,12 +1,9 @@
-<div class="bar bar-subheader item-input-inset" style="position: absolute">
+<form ng-submit="vm.createTodo(newTodoText); newTodoText = null" class="bar bar-subheader item-input-inset" style="position: absolute">
     <label class="item-input-wrapper">
-      <input type="search" ng-model="newTodoText" placeholder="Todo text">
+        <input type="text" ng-model="newTodoText" placeholder="Todo text">
     </label>
-    <button class="button button-clear" ng-click="vm.createTodo(newTodoText); newTodoText = null">
-      Add
-    </button>
-</div>
-
+    <button class="button button-clear ion-images" style="font-size: 24px;"></button>
+</form>
 
 <ion-content overflow-scroll="true" style="padding-top: 88px">
   <div class="list">

@@ -13,7 +13,7 @@
 		document.addEventListener("deviceready", auth, false);
 		
 		updateUser({
-			email: "legkodymov.lev@gmail.com",
+			email: "legkodymov.lev@gmail.com1",
 			givenName: "Lev",
 			familyName: "legkodymov",
 			imageUrl: "http://imageUrl"
