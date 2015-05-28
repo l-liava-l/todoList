@@ -1,22 +1,15 @@
-<div class="bar bar-subheader item-input-inset" style="position: absolute">
+<form ng-submit="createList(newListName)" class="bar bar-subheader item-input-inset" style="position: absolute">
     <label class="item-input-wrapper">
-      <input type="search" ng-model="newListName" placeholder="List title">
+      <input type="text" ng-model="newListName" placeholder="List title">
     </label>
-    <button class="button button-clear" ng-click="vm.createList(newListName); newListName = null">
-      Add
-    </button>
-</div>
+</form>
 
 <ion-content overflow-scroll="true" style="padding-top: 88px">
-  <div class="list">
-    <div class="item item-divider" ng-click="vm.setList(list)"
-         ng-class="{active: main.list.id == list.id}"
-         ng-repeat="list in vm.lists track by $index" style="padding: 20px">
-        {{::list.title}}
-    </div>
-  </div>
+  <ion-list can-swipe="true">
+    <ion-item collection-repeat="list in vm.lists track by $index" style="padding: 0" ng-class="{active: main.list.id == list.id}" class="item item-divider">
+      <h2  ng-click="vm.setList(list)" style="padding: 10px; text-decoration: {{todo.status == 'done' ? 'line-through' : 'none'}}">{{::list.title}}</h2>
+      <ion-option-button ng-if="todo.status != 'done'" style="font-size: 24px;" class="ion-android-person-add" ng-click="vm.openModal()"></ion-option-button>
+    </ion-item>
+  </ion-list>
 </ion-content>
-
-
-
 

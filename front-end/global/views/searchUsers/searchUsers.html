@@ -1,0 +1,21 @@
+<ion-modal-view>
+	 
+    <ion-header-bar style="height: 80px">
+		<div class="list list-inset" style="width: 100%;">
+		  <label class="item item-input">
+		    <i class="icon ion-search placeholder-icon"></i>
+		    <input type="text" placeholder="Search" ng-model="vm.mask" ng-change="vm.getUsers(vm.mask)">
+		  </label>
+		</div>
+    </ion-header-bar>
+
+
+    <ion-content overflow-scroll="true" style="margin-top: 40px;">
+	    <div class="list">
+		    <a collection-repeat="user in vm.users" class="item item-avatar" href="#">
+		      <img ng-src="{{::user.imageUrl}}">
+		      <h2>{{::user.givenName}} {{::user.familyName}}</h2>
+		    </a>
+		</div>
+    </ion-content>
+</ion-modal-view>

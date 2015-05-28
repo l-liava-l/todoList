@@ -44,5 +44,14 @@
 				}
 			}
 		});
+
+		core.post('/api/user/getByMask', function (req, res){
+			var findQuery = "SELECT * FROM users WHERE email LIKE '" + req.body.mask +"%';";
+		
+			db.query(findQuery, function(err, rows, fields) {
+			  if(err){ throw err; }
+			  res.send(rows);
+			});
+		});
 	}
 })();

@@ -2,9 +2,9 @@
 	angular.module('todoList')
 		.controller('TodoCtrl', TodoCtrl);
 
-	TodoCtrl.$inject = ['$scope', 'core', '$timeout', '$state'];
+	TodoCtrl.$inject = ['$scope', 'core', '$timeout', '$state', '$ionicListDelegate'];
 
-	function TodoCtrl($scope, core, $timeout, $state){
+	function TodoCtrl($scope, core, $timeout, $state, $ionicListDelegate){
 		var vm = this;
 
 		vm.createTodo = createTodo;
@@ -24,6 +24,7 @@
 			}, onSuccess);
 
 			function onSuccess(){
+				$ionicListDelegate.closeOptionButtons()
 				getTodoListed();
 			}
 		}

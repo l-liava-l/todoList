@@ -8,11 +8,22 @@
 
 <ion-content overflow-scroll="true" style="padding-top: 88px">
   <ion-list can-swipe="true">
-    <ion-item ng-repeat="todo in vm.todoList track by $index" style="background: #fff !important; padding: 0;" class="item item-divider">
+    <ion-item collection-repeat="todo in vm.todoList track by $index" style="background: #fff !important; padding: 0;" class="item item-divider">
       <h2 style="padding: 10px; text-decoration: {{todo.status == 'done' ? 'line-through' : 'none'}}"> {{::todo.text}}</h2>
-      <ion-option-button style="font-size: 24px;" class="ion-android-person-add" ng-click="share(item)"></ion-option-button>
-      <ion-option-button style="font-size: 24px;" class="ion-ios-star-outline" ng-click="edit(item)"></ion-option-button>
-      <ion-option-button style="font-size: 24px;" class="ion-checkmark" ng-click="vm.setTodoStatus(todo.id, 'done')"></ion-option-button>
+ 
+      <ion-option-button ng-if="todo.status != 'done'" style="font-size: 24px;" class="ion-android-person-add" ></ion-option-button>
+      <ion-option-button ng-if="todo.status != 'done'" style="font-size: 24px;" class="ion-ios-star-outline" ></ion-option-button>
+      <ion-option-button ng-if="todo.status != 'done'" style="font-size: 24px;" 
+                         class="ion-checkmark" 
+                         ng-click="vm.setTodoStatus(todo.id, 'done')">
+      </ion-option-button>
+   
+     
+      <ion-option-button ng-if="todo.status == 'done'"
+                         style="font-size: 24px;" 
+                         class="ion-loop" 
+                         ng-click="vm.setTodoStatus(todo.id, 'new')">
+      </ion-option-button>
     </ion-item>
   </ion-list>
 </ion-content>

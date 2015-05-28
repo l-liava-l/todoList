@@ -2,13 +2,22 @@
 	angular.module('todoList')
 		.controller('ListsCtrl', ListsCtrl);
 
-	ListsCtrl.$inject = ['$scope', 'core', 'localWriter', '$state', '$q'];
+	ListsCtrl.$inject = ['$scope', 'core', 'localWriter', '$state', '$q', '$ionicModal'];
 
-	function ListsCtrl($scope, core, localWriter, $state, $q){
+	function ListsCtrl($scope, core, localWriter, $state, $q, $ionicModal){
 		var vm = this;
 	
 		vm.createList = createList;
 		vm.setList = setList;
+		vm.openModal = openModal;
+		vm.getUsers = getUsers;
+
+		$ionicModal.fromTemplateUrl('views/searchUsers/searchUsers.html', {
+	        scope: $scope,
+	        animation: 'slide-in-up'
+	    }).then(function(modal) {
+	       $scope.modal = modal;
+	    });
 
 		getLists();
 
@@ -34,6 +43,14 @@
 				$state.go('todo');
 			}	
 		}
+		
+		function getUsers(mask){
+			core.getUsers({mask: mask}, onSuccess);
+
+			function onSuccess(data){
+				vm.users = data;
+			}
+		}
 
 		function createList(title){
 			core.createList({
@@ -45,6 +62,10 @@
 				setList(data);
 			}
 		}
+
+		function openModal() {
+		    $scope.modal.show();
+		};
 	}
 })();
 
