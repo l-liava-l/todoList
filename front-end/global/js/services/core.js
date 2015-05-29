@@ -15,10 +15,22 @@
            createTodo: createTodo,
            getTodoListed: getTodoListed,
            setTodoStatus: setTodoStatus,
-           getUsers: getUsers
+           getUsers: getUsers,
+           addUserToList: addUserToList,
+           getListUsers: getListUsers
         };
 
         return API;
+
+        function getListUsers(params, onSuccess){
+            requester.post(waysKnower.getListUsers, params)
+                .then(onSuccess, onError);
+        }
+
+        function addUserToList(params, onSuccess){
+            requester.post(waysKnower.addUserToList, params)
+                .then(onSuccess, onError);
+        }
 
         function getUsers(params, onSuccess){
             requester.post(waysKnower.getUsers, params)

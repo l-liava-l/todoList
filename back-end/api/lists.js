@@ -27,23 +27,79 @@
 			function get(){
 				var getQuery = "SELECT * FROM `group` WHERE email='"+req.body.email+"';";
 
-				db.query(getQuery, get);
+				db.query(getQuery, getLists);
 
-				function get(err, rows, fields){
+				function getLists(err, rows, fields){
 					if(err){throw err;}
 
-					var query = "SELECT * FROM `lists` "
+					var query = "SELECT lists.*, users.* FROM `lists`, `group`, `users`"
 
 					rows.forEach(function(item, id){
-						query += (id ? " OR" : "WHERE ") + " id='"+item.listID+"'";
+						query += (id ? " OR " : " WHERE ") + "(`lists`.id='"+item.listID+"' AND `lists`.id = `group`.listID AND `group`.email = `users`.email)";
 					});
 
 					db.query(query + ';', function(err, rows, fields) {
-					  if(err){throw err;}
-					  res.send(rows);
+						if(err){throw err;}
+						var lists = [];
+
+						rows.forEach(function(item){
+							var list = serachById(item.id);
+							if(!list){
+								lists.push(genNewList(item))
+								return false;
+							}
+							
+							list.users.push(genNewUsrObj(item));
+
+						});
+
+						res.send(lists);
+
+						function genNewList(row){
+							return {
+								title: row.title,
+								id: row.id,
+								users: [genNewUsrObj(row)]
+							}
+						}
+
+						function genNewUsrObj(row){
+							return {
+								givenName: row.givenName,
+								familyName: row.familyName,
+								imageUrl: row.imageUrl,
+								email: row.email
+							}
+						}
+
+						function serachById(id){
+							var output; 
+							lists.forEach(function(item){
+								if(item.id === id){
+									output = item;
+								}
+							});
+
+							return output;
+						}
 					});
 				}
 			}
+		});
+
+		core.post('/api/lists/getUsers', function (req, res){
+			req.body.listId ? res.send(true) : res.send(false);
+		});
+
+		core.post('/api/lists/addUser', function (req, res){
+			if(req.body.email && req.body.listId){
+				addUser(req.body.listId, req.body.email, function(){
+					res.send(true)
+				});
+				return false;
+			}
+
+			res.send(false)
 		});
 
 		function addUser(listId, email, callback){

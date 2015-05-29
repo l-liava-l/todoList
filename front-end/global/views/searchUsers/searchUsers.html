@@ -1,5 +1,4 @@
 <ion-modal-view>
-	 
     <ion-header-bar style="height: 80px">
 		<div class="list list-inset" style="width: 100%;">
 		  <label class="item item-input">
@@ -9,10 +8,9 @@
 		</div>
     </ion-header-bar>
 
-
     <ion-content overflow-scroll="true" style="margin-top: 40px;">
 	    <div class="list">
-		    <a collection-repeat="user in vm.users" class="item item-avatar" href="#">
+		    <a collection-repeat="user in vm.users" class="item item-avatar" ng-click="vm.addUserToList(user)">
 		      <img ng-src="{{::user.imageUrl}}">
 		      <h2>{{::user.givenName}} {{::user.familyName}}</h2>
 		    </a>

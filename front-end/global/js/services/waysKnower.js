@@ -15,6 +15,8 @@
 			getTodoListed: 'http://192.168.0.105:8002/api/todo/get/listed',
 			setTodoStatus: 'http://192.168.0.105:8002/api/todo/set/status',
 			getUsers: 'http://192.168.0.105:8002/api/user/getByMask',
+			addUserToList: 'http://192.168.0.105:8002/api/lists/addUser',
+			getListUsers: 'http://192.168.0.105:8002/api/lists/getUsers'
 		};
 		
 		return { $get: _get }
