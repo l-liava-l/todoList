@@ -11,7 +11,7 @@
 		$scope.main.list = localWriter.get('list');
 
 		document.addEventListener("deviceready", auth, false);
-		
+
 		updateUser({
 			email: "legkodymov.lev@gmail.com1",
 			givenName: "Lev",
@@ -22,6 +22,10 @@
 		function updateUser(obj){
 			main.user = obj;
 			core.updateUser(obj);
+
+			core.socketConnect(function(){
+				core.socketEmitUser({email: obj.email});
+			});
 		}
 
 		function auth(){

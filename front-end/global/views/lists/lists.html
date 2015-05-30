@@ -5,11 +5,15 @@
 </form>
 
 <ion-content overflow-scroll="true" style="padding-top: 88px">
-  <ion-list can-swipe="true">
-    <ion-item collection-repeat="list in vm.lists track by $index" style="padding: 0" ng-class="{active: main.list.id == list.id}" class="item item-divider">
-      <h2  ng-click="vm.setList(list)" style="padding: 10px; text-decoration: {{todo.status == 'done' ? 'line-through' : 'none'}}">{{::list.title}}</h2>
-      <ion-option-button ng-if="todo.status != 'done'" style="font-size: 24px;" class="ion-android-person-add" ng-click="vm.openModal()"></ion-option-button>
-    </ion-item>
-  </ion-list>
+    <ion-list can-swipe="true">
+      <ion-item collection-repeat="list in vm.lists track by $index" style="padding: 0" ng-class="{active: main.list.id == list.id}" class="item item-divider">
+        <h2  ng-click="vm.setList(list)" style="padding: 10px; text-decoration: {{todo.status == 'done' ? 'line-through' : 'none'}}">{{::list.title}}</h2>
+        <ion-option-button ng-if="todo.status != 'done'" style="font-size: 24px;" class="ion-android-person-add" ng-click="vm.openModal()"></ion-option-button>
+        <a ng-repeat="user in list.users" class="item item-avatar">
+          <img ng-src="{{::user.imageUrl}}">
+          <h2>{{::user.givenName}} {{::user.familyName}}</h2>
+        </a>
+      </ion-item>
+    </ion-list>
 </ion-content>
 

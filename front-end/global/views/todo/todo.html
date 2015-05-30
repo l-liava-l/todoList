@@ -6,13 +6,43 @@
 </form>
 
 
-<ion-content overflow-scroll="true" style="padding-top: 88px">
-  <ion-list can-swipe="true">
-    <ion-item collection-repeat="todo in vm.todoList track by $index" style="background: #fff !important; padding: 0;" class="item item-divider">
-      <h2 style="padding: 10px; text-decoration: {{todo.status == 'done' ? 'line-through' : 'none'}}"> {{::todo.text}}</h2>
- 
-      <ion-option-button ng-if="todo.status != 'done'" style="font-size: 24px;" class="ion-android-person-add" ></ion-option-button>
-      <ion-option-button ng-if="todo.status != 'done'" style="font-size: 24px;" class="ion-ios-star-outline" ></ion-option-button>
+<ion-content overflow-scroll="true" style="padding-top: 90px">
+    <ion-list can-swipe="true">
+        <ion-item collection-repeat="todo in vm.todoList track by $index"  
+                  class="item item-divider"
+                  ng-class="{'item-thumbnail-left': todo.imageUrl, 
+                             'major-item': todo.status == 'major'}">
+       
+        <img ng-if="todo.imageUrl" ng-src="{{todo.imageUrl}}">
+        <p style="text-decoration: {{todo.status == 'done' ? 'line-through' : 'none'}}"> 
+            {{::todo.text}}
+        </p>
+      
+      
+             <!--div style="font-size: 24px; float: right; margin-right: -40px">  
+
+                <button ng-if="todo.status != 'done'" 
+                        ng-class="todo.status == 'major' ? 'ion-star' : 'ion-ios-star-outline'" 
+                        style="{{todo.status == 'major' ? 'color: gold' : ''}}" 
+                        class="button-icon button icon " 
+                        ng-click="vm.setTodoStatus(todo.id, {{todo.status == 'major' ? 'new' : 'major'}})">
+                </button>
+                <button style="{{todo.status == 'done' ? 'color: green' : ''}}" 
+                        class="button-icon button icon ion-checkmark" 
+                        ng-click="vm.setTodoStatus(todo.id, {{todo.status == 'done' ? 'new' : 'done'}})">
+                </button>
+            </div-->
+      <!--ion-option-button ng-if="todo.status != 'done'" style="font-size: 24px;" class="ion-android-person-add" ></ion-option-button-->
+      <ion-option-button ng-if="todo.status == 'new'" 
+            style="font-size: 24px;" 
+            class="ion-ios-star-outline" ng-click="vm.setTodoStatus(todo.id, 'major')">
+      </ion-option-button>
+
+      <ion-option-button ng-if="todo.status == 'major'" 
+            style="font-size: 24px; color: gold" class="ion-star" 
+            ng-click="vm.setTodoStatus(todo.id, 'new')">
+      </ion-option-button>
+
       <ion-option-button ng-if="todo.status != 'done'" style="font-size: 24px;" 
                          class="ion-checkmark" 
                          ng-click="vm.setTodoStatus(todo.id, 'done')">

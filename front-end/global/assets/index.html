@@ -15,16 +15,18 @@
 
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
+    <script src="lib/socket.io.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
+
 
     <!-- your app's js -->
     <script src="global.js"></script>
 
   </head>
   <body ng-controller="MainCtrl as main">
-    <div class="bar bar-header">
+    <div class="bar bar-header bar-positive">
       <button class="button button-icon icon ion-navicon" ui-sref="lists"></button>
       <div class="h1 title">{{main.list.title || 'Group TODO'}}</div>
     </div>

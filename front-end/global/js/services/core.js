@@ -4,11 +4,11 @@
     angular.module('todoList')
         .factory('core', core);
 
-    core.$inject = ['requester',  'waysKnower', 'localWriter'];
+    core.$inject = ['requester',  'waysKnower', 'localWriter', '$q'];
 
-    function core(requester, waysKnower, localWriter) {
+    function core(requester, waysKnower, localWriter, $q) {
 
-        var API = {
+        var socket, API = {
            updateUser: updateUser,
            createList: createList,
            getLists: getLists,
@@ -17,10 +17,21 @@
            setTodoStatus: setTodoStatus,
            getUsers: getUsers,
            addUserToList: addUserToList,
-           getListUsers: getListUsers
+           getListUsers: getListUsers,
+           socketConnect: socketConnect,
+           socketEmitUser: socketEmitUser
         };
 
         return API;
+
+        function socketEmitUser(params){
+            socket.emit('user', params)
+        }
+
+        function socketConnect(onSuccess){
+            socket = io.connect(waysKnower.socket);
+            socket.on('connect', onSuccess);
+        }
 
         function getListUsers(params, onSuccess){
             requester.post(waysKnower.getListUsers, params)

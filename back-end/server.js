@@ -2,7 +2,7 @@
 	var express = require('express');
 	var db = require('./db');
 	var bodyParser = require('body-parser');
-
+	var io = require('socket.io');
 	var core = express();
 
 	var server = core.listen(8002, function () {
@@ -11,6 +11,9 @@
 
 		console.log('Server started on', host + ':' + port);
 	});
+
+	var onlineUsers = {};
+	io = io(server);
 
 	core.use(function(req, res, next) {
 		var headers = {
@@ -31,6 +34,19 @@
 	core.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 	  extended: true
 	})); 
+
+	io.on('connection', function(socket, user) {
+		socket.on('user', function(data){
+			onlineUsers[data.email] = true;
+			user = data.email;
+			console.log(user + ' connected');
+		});
+
+		socket.on('disconnect', function(){
+			delete onlineUsers[user];
+			console.log(user + ' disconnected');
+		});
+	});
 	/*
 	core.all('*', function (req, res, next) {
 	  console.log('Accessing', req.headers, req.body, req.params);
