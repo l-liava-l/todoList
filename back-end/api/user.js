@@ -1,57 +1,61 @@
-(function(){
-	module.exports = init;
-	
-	function init(core, db){
+module.exports = function(core, db){
+	var onlineUsers = module.exports.users = {}
+	return socketAPI;
 
-		core.post('/api/user/update', function (req, res){
-
-			var findQuery = "SELECT * FROM users WHERE email = '" + req.body.email +"';";
-		
-			db.query(findQuery, function(err, rows, fields) {
-			  if(err){ throw err; }
-			  rows.length ? update("'" + (rows[0].id) + "'") : insert();
-			});
-
-			function insert(){
-				var insertQuery = "INSERT INTO users(email, givenName, familyName, imageUrl)" 
-							 + "VALUES ('" +
-							 		req.body.email+"','"+ 
-							 		req.body.givenName +"','"+
-							 		req.body.familyName+"','"+ 
-							 		req.body.imageUrl+"');";
-
-				db.query(insertQuery, function(err, rows, fields) {
-				  if (err){throw err;}
-				  console.log('User inserted successful.');
-				});
-			}
-
-			function update(id){
-
-				var insertQueries = [
-					"UPDATE users SET givenName = '" + req.body.givenName + "' WHERE email = '"+req.body.email+"';",
-					"UPDATE users SET familyName = '" + req.body.familyName + "' WHERE email = '"+req.body.email+"';",
-					"UPDATE users SET imageUrl = '" + req.body.imageUrl + "' WHERE email = '"+req.body.email+"';"
-				];
-
-				for(var key in insertQueries){query(insertQueries[key])}
-
-				function query(q){
-					db.query(q, function(err, rows, fields) {
-					  if (err){throw err;}
-					  console.log('User updated');
-					});
-				}
-			}
+	function socketAPI(socket, user){
+		socket.on('api:user:update', function(data){
+			console.log(data.email + ' connected');
+			onlineUsers[data.email] = socket;
+			user = data.email;
+			updateUser(data);
 		});
 
-		core.post('/api/user/getByMask', function (req, res){
-			var findQuery = "SELECT * FROM users WHERE email LIKE '" + req.body.mask +"%';";
-		
-			db.query(findQuery, function(err, rows, fields) {
-			  if(err){ throw err; }
-			  res.send(rows);
-			});
+		socket.on('disconnect', function(){
+			console.log(user + ' disconnected');
+			delete onlineUsers[user];
 		});
 	}
-})();
+
+	core.post('/api/user/getByMask', function (req, res){
+		var findQuery = "SELECT * FROM users WHERE email LIKE '" + req.body.mask +"%';";
+
+		db.query(findQuery, function(err, rows, fields){
+		  if(err){ throw err; }
+		  res.send(rows);
+		});
+	});
+
+	function updateUser(user){
+	  	db.query("SELECT * FROM users WHERE email = '" + user.email +"';", checkExist)
+
+	  	function checkExist(err, rows, fields){
+			rows.length ? update("'" + (rows[0].id) + "'") : insert();
+		}
+
+		function insert(){
+			var insertQuery = "INSERT INTO users(email, givenName, familyName, imageUrl) VALUES ('" +
+				 			    user.email+"','"+ 
+							    user.givenName +"','"+
+						 		user.familyName+"','"+ 
+						 		user.imageUrl+"');"
+
+			db.query(insertQuery, function(err, rows, fields) {
+			   console.log('New user added.');
+			});
+		}
+
+		function update(){
+			var query =	"UPDATE users SET (" +
+					"givenName = '" + user.givenName + "' AND " +
+					"familyName = '" + user.familyName + "' AND " +
+					"imageUrl = '" + user.imageUrl + "') WHERE email = '"+user.email+"';";
+
+			db.query(query, function(err, rows, fields){
+			  console.log('User profile updated.');
+			});
+		}
+	}
+} 
+
+
+

@@ -1,19 +1,11 @@
 (function(){
 	var express = require('express');
 	var db = require('./db');
-	var bodyParser = require('body-parser');
-	var io = require('socket.io');
 	var core = express();
-
-	var server = core.listen(8002, function () {
-		var host = server.address().address;
-		var port = server.address().port;
-
-		console.log('Server started on', host + ':' + port);
-	});
-
+	var server = createServer();
+	var io = require('socket.io')(server);
+	var bodyParser = require('body-parser');
 	var onlineUsers = {};
-	io = io(server);
 
 	core.use(function(req, res, next) {
 		var headers = {
@@ -30,30 +22,26 @@
 		next();
 	});
 
-	core.use( bodyParser.json() );       // to support JSON-encoded bodies
-	core.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+	var userAPI = new require('./api/user')(core, db);
+	var listAPI = new require('./api/lists')(core, db, userAPI.users);
+	var todoAPI = new require('./api/todo')(core, db, userAPI.users);
+
+	core.use(bodyParser.json());     
+	core.use(bodyParser.urlencoded({
 	  extended: true
 	})); 
 
-	io.on('connection', function(socket, user) {
-		socket.on('user', function(data){
-			onlineUsers[data.email] = true;
-			user = data.email;
-			console.log(user + ' connected');
-		});
+	io.on('connection', function(socket){
+		userAPI(socket);
+		listAPI(socket);
+		todoAPI(socket);
+	});
 
-		socket.on('disconnect', function(){
-			delete onlineUsers[user];
-			console.log(user + ' disconnected');
+	function createServer(){
+		return core.listen(8002, function () {
+			var host = server.address().address;
+			var port = server.address().port;
+			console.log('Server started on', host + ':' + port);
 		});
-	});
-	/*
-	core.all('*', function (req, res, next) {
-	  console.log('Accessing', req.headers, req.body, req.params);
-	  next(); // pass control to the next handler
-	});
-	*/
-	var listsAPI = require('./api/lists')(core, db);
-	var userAPI = require('./api/user')(core, db);
-	var todoAPI = require('./api/todo')(core, db);
+	}
 })();

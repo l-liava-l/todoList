@@ -4,12 +4,11 @@
     angular.module('todoList')
         .factory('core', core);
 
-    core.$inject = ['requester',  'waysKnower', 'localWriter', '$q'];
+    core.$inject = ['requester',  'waysKnower', 'localWriter', '$q', 'auth', '$state'];
 
-    function core(requester, waysKnower, localWriter, $q) {
+    function core(requester, waysKnower, localWriter, $q, auth, $state){
 
         var socket, API = {
-           updateUser: updateUser,
            createList: createList,
            getLists: getLists,
            createTodo: createTodo,
@@ -18,19 +17,28 @@
            getUsers: getUsers,
            addUserToList: addUserToList,
            getListUsers: getListUsers,
-           socketConnect: socketConnect,
-           socketEmitUser: socketEmitUser
+           socketConnect: socketConnect
         };
 
         return API;
 
-        function socketEmitUser(params){
-            socket.emit('user', params)
-        }
-
-        function socketConnect(onSuccess){
+        function socketConnect(user){
+            API.user = user;
             socket = io.connect(waysKnower.socket);
-            socket.on('connect', onSuccess);
+            socket.on('connect', socketEmitUser);
+
+            function socketEmitUser(){
+                if(!user || !user.email){
+                    user = {
+                        email: "legkodymov.lev@gmail.com1",
+                        givenName: "Lev",
+                        familyName: "legkodymov",
+                        imageUrl: "http://imageUrl"
+                    }
+                }
+                $state.reload();
+                socket.emit('api:user:update',  user)
+            }
         }
 
         function getListUsers(params, onSuccess){
@@ -63,14 +71,12 @@
                 .then(onSuccess, onError);
         }
 
-        function getLists(params, onSuccess){
-            requester.post(waysKnower.getLists, params)
-                .then(onSuccess, onError);
-        }
+        function getLists(onSuccess){
+            if(!API.user || !API.user.email){
+                return localWriter.get('lists') || [];
+            }
 
-        function updateUser(params, onSuccess){
-            API.user = params;
-            requester.post(waysKnower.updateUser, params)
+            requester.post(waysKnower.getLists, API.user.email)
                 .then(onSuccess, onError);
         }
 

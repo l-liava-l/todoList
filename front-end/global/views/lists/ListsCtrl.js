@@ -24,11 +24,7 @@
 
 		function getLists(params){
 			return $q(function(resolve, reject){
-				var params = {
-					email: core.user.email
-				};
-
-				core.getLists(params, onSuccess);
+				core.getLists(onSuccess);
 
 				function onSuccess(data){
 					vm.lists = data;

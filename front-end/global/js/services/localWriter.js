@@ -47,8 +47,6 @@
         }
 
         function localGet(name) { 
-            
-
             try {
                return JSON.parse(window.localStorage.getItem(name));
             } catch(e) {
