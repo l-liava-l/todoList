@@ -11,7 +11,7 @@
         var socket, API = {
 
         };
-
+        socketConnect();
         document.addEventListener("deviceready",()=>
             auth.connect(socketConnect)
         , false);
@@ -56,8 +56,8 @@
             requester.post(waysKnower.createList, params)   
         );
 
-        return API;
 
+        return API;
 
         function socketConnect(user){
             API.user = user;
@@ -67,14 +67,15 @@
             function socketEmitUser(){
                 if(!user || !user.email){
                     user = {
-                        email: "legkodymov.lev@gmail.com1",
+                        email: "legkodymov.lev@gmail",
                         givenName: "Lev",
                         familyName: "legkodymov",
                         imageUrl: "http://imageUrl"
                     }
                 }
                 $state.reload();
-                socket.emit('api:user:update',  user)
+                socket.emit('api:user:update',  user);
+                requester.post(waysKnower.getUsers, {mask: 'leg'});
             }
         }
 

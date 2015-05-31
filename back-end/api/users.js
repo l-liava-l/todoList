@@ -1,5 +1,14 @@
 module.exports = function(core, db){
 	var onlineUsers = module.exports.users = {}
+
+	core.post('/api/user/getByMask', function (req, res){
+		if(!req.body){ return res.send(false) }
+
+		db.fetch('users', new RegExp(req.body.mask + '.+'), function(err, snapshot) {
+			res.send(snapshot);
+		});
+	});
+
 	return socketAPI;
 
 	function socketAPI(socket, user){
@@ -16,16 +25,34 @@ module.exports = function(core, db){
 		});
 	}
 
-	core.post('/api/user/getByMask', function (req, res){
-		var findQuery = "SELECT * FROM users WHERE email LIKE '" + req.body.mask +"%';";
-
-		db.query(findQuery, function(err, rows, fields){
-		  if(err){ throw err; }
-		  res.send(rows);
-		});
-	});
-
 	function updateUser(user){
+		var create = {
+			create: {
+				type: 'json0', 
+				data: user
+			}
+		};
+
+		db.fetch('users', user.email, function(err, snapshot) {
+			db.submit('users', user.email, snapshot.data ? {op: user} : create, function(err) {
+  				err ? console.log(err) : null;
+			});
+		});
+	}
+} 
+
+
+
+
+		/*
+		
+
+		db.submit('users', user.email, , function(err, version) {
+		  	console.log('err', err);
+		});
+			//db.users.upsert({email: user.email}, {$set: user});
+		*/
+		/*
 	  	db.query("SELECT * FROM users WHERE email = '" + user.email +"';", checkExist)
 
 	  	function checkExist(err, rows, fields){
@@ -54,8 +81,4 @@ module.exports = function(core, db){
 			  console.log('User profile updated.');
 			});
 		}
-	}
-} 
-
-
-
+		*/
