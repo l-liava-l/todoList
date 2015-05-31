@@ -5,19 +5,7 @@ module.exports = function(core, db, users){
 
 	}
 
-	core.post('/api/todo/create', function (req, res){
-		req.body.text && req.body.listID ? insert() : res.send(false);
-
-		function insert(){
-			var insertQuery = "INSERT INTO `todo`(id, text, listId, status) " 
-						 + " VALUES ('"+Date.now()+"','"+req.body.text+"','"+req.body.listID + "', 'new');";
-
-			db.query(insertQuery, function(err, rows, fields) {
-			  if(err){throw err;}
-			  res.send(true);
-			});
-		}
-	});
+	
 
 	core.post('/api/todo/get/listed', function (req, res){
 		req.body.listID ? get() : res.send(false);

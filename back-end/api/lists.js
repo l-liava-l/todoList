@@ -5,8 +5,14 @@ module.exports = function(core, db, livedb){
 
 	}
 
+	/*
+	*  Создаем новый лист
+	*  @creator - email юзера
+	*  @title - тайтл класса 
+	*  @id - id листа
+	*/
 	core.post('/api/lists/create', function (req, res){
-		if(!req.body.creator && !req.body.title && !req.body.id){
+		if(!req.body.creator || !req.body.title || !req.body.id){
 			return res.send(false);
 		}
 
@@ -18,14 +24,20 @@ module.exports = function(core, db, livedb){
 		};
 
 		req.body.users = [req.body.creator];
+		req.body.todoes = {};
 
 		livedb.submit('lists', req.body.id, create, function(err) {
 		  	if(!err){res.send(true)}
 		});		
 	});
 
+	/*
+	*  Добавляем юзера в лист
+	*  @email - email юзера
+	*  @listId - id листа 
+	*/
 	core.post('/api/lists/addUser', function (req, res){
-		if(!req.body.email && !req.body.listId){
+		if(!req.body.email || !req.body.listId){
 			return res.send(false);
 		}
 	
@@ -42,6 +54,22 @@ module.exports = function(core, db, livedb){
 		  		if(!err){res.send(true)}
 			});	
 		});
+	});
+
+
+	core.post('/api/todo/create', function (req, res){
+		if(!req.body.text || !req.body.listId){
+		 	return res.send(false);
+		}
+		
+		req.body.id = Date.now();
+		req.body.status = 'new';
+		
+		var opData = {op: [{p: ["todoes", req.body.id], oi: req.body}]};
+		livedb.submit('lists', req.body.listId, opData, function(err, version) {
+			console.log('err', err, version);
+	  		if(!err){res.send(true)}
+		});	
 	});
 
 	return socketAPI;

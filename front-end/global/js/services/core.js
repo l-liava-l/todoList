@@ -77,7 +77,8 @@
                 socket.emit('api:user:update',  user);
                 //requester.post(waysKnower.getUsers, {mask: 'leg'});
                 //requester.post(waysKnower.createList, {title: 'list 1', creator: user.email, id: Date.now()}) 
-                requester.post(waysKnower.addUserToList, {listId: '1433106068773', email: '1testsd@gmail.com'});
+                //requester.post(waysKnower.addUserToList, {listId: '1433106068773', email: '1testsd@gmail.com'});
+                //requester.post(waysKnower.createTodo, {listId: '1433106068773', text: 'first todo'})
             }
         }
 
