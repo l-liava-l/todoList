@@ -9,6 +9,8 @@
 		var main = this;
 
 		$scope.main.list = localWriter.get('list');
+
+		console.log(Swarm);
 	}
 })();
 

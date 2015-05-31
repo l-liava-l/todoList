@@ -207,7 +207,7 @@ gulp.task('git-check', function(done) {
 
             gulp.src(bowerJs)
                 .pipe(concat('vendor.js'))
-                .pipe(uglify())
+                //.pipe(uglify())
                 .pipe(gulp.dest(path.public));
 
             gulp.src(bowerCss)

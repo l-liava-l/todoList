@@ -7,6 +7,8 @@
 	var bodyParser = require('body-parser');
 	var onlineUsers = {};
 
+	var Swarm = require('swarm');
+
 	core.use(function(req, res, next) {
 		var headers = {
 			'Cache-Control' : 'max-age:120'  
