@@ -1,11 +1,11 @@
 module.exports = function(core, db){
-	var onlineUsers = module.exports.users = {}
+	var onlineUsers = {}
+	var users = db.collection('users');
 
 	core.post('/api/user/getByMask', function (req, res){
 		if(!req.body){ return res.send(false) }
-
-		db.fetch('users', new RegExp(req.body.mask + '.+'), function(err, snapshot) {
-			res.send(snapshot);
+		users.find({_id: new RegExp(req.body.mask + '.+')}).limit(8).toArray(function(err, arr){
+			console.log(arr);
 		});
 	});
 
@@ -26,17 +26,8 @@ module.exports = function(core, db){
 	}
 
 	function updateUser(user){
-		var create = {
-			create: {
-				type: 'json0', 
-				data: user
-			}
-		};
-
-		db.fetch('users', user.email, function(err, snapshot) {
-			db.submit('users', user.email, snapshot.data ? {op: user} : create, function(err) {
-  				err ? console.log(err) : null;
-			});
+		users.update({_id: user.email}, user, {upsert: true}, function(err, cursor){
+			//
 		});
 	}
 } 
@@ -45,8 +36,24 @@ module.exports = function(core, db){
 
 
 		/*
-		
+		var create = {
+			create: {
+				type: 'json0', 
+				data: user
+			}
+		};
+		db.fetch('users', new RegExp(req.body.mask + '.+'), function(err, snapshot) {
+			console.log('===========================');
+			console.log(snapshot);
+			res.send(snapshot.data);
+		});
 
+
+		db.fetch('users', user.email, function(err, snapshot) {
+			db.submit('users', user.email, snapshot.data ? {op: user} : create, function(err) {
+  				err ? console.log(err) : null;
+			});
+		});
 		db.submit('users', user.email, , function(err, version) {
 		  	console.log('err', err);
 		});

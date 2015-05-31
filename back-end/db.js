@@ -1,21 +1,10 @@
-(function(){
-	var mysql = require('mysql');
-	
-	var connection = mysql.createConnection({
-		host: 'localhost',
-		user: 'root',
-		password: ''
+var dbUrl = 'mongodb://localhost:27017/todoList';
+
+var db = require('mongodb')
+	.MongoClient.connect(dbUrl, function(err, db) {
+		module.exports.db = db;
 	});
 
-	connection.connect();
-
-	connection.query("USE todo;", function(err){
-		if (err) throw err;
-		console.log('db connection success');
-	});
-
-	module.exports = connection;
-})();
-
-
+module.exports.livedb = require('livedb')
+	.client(require('livedb-mongo')(dbUrl));
 

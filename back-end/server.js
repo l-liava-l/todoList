@@ -3,16 +3,17 @@
 	var core = express();
 	var server = createServer();
 	var io = require('socket.io')(server);
-	var livedb = require('livedb');
-	var liveDbMongo = require('livedb-mongo');
 	var bodyParser = require('body-parser');
-	var db = livedb.client(liveDbMongo('mongodb://localhost:27017'));
-	
-	io.on('connection', function(socket){
-		usersAPI(socket);
-		//listAPI(socket);
-		//todoAPI(socket);
-	});
+	var dbUrl = 'mongodb://localhost:27017/todoList'
+	var livedb = require('livedb').client(require('livedb-mongo')(dbUrl));
+	var mongodb = require('mongodb').connect(dbUrl, function(err, db){
+		var usersAPI = new require('./api/users')(core, db);
+		io.on('connection', function(socket){
+			usersAPI(socket);
+			//listAPI(socket);
+			//todoAPI(socket);
+		});
+	});	
 
 	core.use(bodyParser.json());     
 	core.use(bodyParser.urlencoded({
@@ -33,9 +34,6 @@
 
 		next();
 	});
-
-	var usersAPI = new require('./api/users')(core, db);
-
 
 	function createServer(){
 		return core.listen(8002, function () {

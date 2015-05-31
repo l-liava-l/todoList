@@ -67,15 +67,14 @@
             function socketEmitUser(){
                 if(!user || !user.email){
                     user = {
-                        email: "legkodymov.lev@gmail",
-                        givenName: "Lev",
+                        email: "leggggsddgggg@gmail",
+                        givenName: "LEV",
                         familyName: "legkodymov",
                         imageUrl: "http://imageUrl"
                     }
                 }
                 $state.reload();
                 socket.emit('api:user:update',  user);
-                requester.post(waysKnower.getUsers, {mask: 'leg'});
             }
         }
 
