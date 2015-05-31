@@ -1,29 +1,53 @@
-module.exports = function(core, db, users){
-	return socketAPI;
-
+module.exports = function(core, db, livedb){
+	var lists = db.collection('lists');
+	
 	function socketAPI(socket){
 
 	}
-	
+
 	core.post('/api/lists/create', function (req, res){
-		req.body.email && req.body.title ? insert(Date.now()) : res.send(false);
-
-		function insert(listId){
-			var insertQuery = "INSERT INTO `lists`(id, title) " 
-						 + " VALUES ('"+listId+"','"+req.body.title +"');";
-
-			db.query(insertQuery, function(err, rows, fields) {
-			  if(err){throw err;}
-			  addUser(listId, req.body.email, function(){
-			  	res.send({
-			  		id: listId,
-			  		title: req.body.title
-			  	});
-			  });
-			});
+		if(!req.body.creator && !req.body.title && !req.body.id){
+			return res.send(false);
 		}
+
+		var create = {
+			create: {
+				type: 'json0', 
+				data: req.body
+			}
+		};
+
+		req.body.users = [req.body.creator];
+
+		livedb.submit('lists', req.body.id, create, function(err) {
+		  	if(!err){res.send(true)}
+		});		
 	});
 
+	core.post('/api/lists/addUser', function (req, res){
+		if(!req.body.email && !req.body.listId){
+			return res.send(false);
+		}
+	
+		lists.find({_id: req.body.listId}).toArray(function(err, arr){
+			if(!arr || arr[0].users.indexOf(req.body.email) >= 0){
+				return res.send(false);
+			}
+
+			var id = arr[0].users.length;
+
+			var opData = {op: [{p: ["users", id], li: req.body.email}]};
+			livedb.submit('lists', req.body.listId, opData, function(err, version) {
+				console.log('err', err, version);
+		  		if(!err){res.send(true)}
+			});	
+		});
+	});
+
+	return socketAPI;
+
+	
+	
 	core.post('/api/lists/get', function (req, res){
 		req.body.email ? get() : res.send(false);
 
@@ -94,16 +118,6 @@ module.exports = function(core, db, users){
 		req.body.listId ? res.send(true) : res.send(false);
 	});
 
-	core.post('/api/lists/addUser', function (req, res){
-		if(req.body.email && req.body.listId){
-			addUser(req.body.listId, req.body.email, function(){
-				res.send(true)
-			});
-			return false;
-		}
-
-		res.send(false)
-	});
 
 	function addUser(listId, email, callback){
 		var insertQuery = "INSERT INTO `group`(listId, email) " 

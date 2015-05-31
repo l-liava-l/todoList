@@ -5,13 +5,21 @@ module.exports = function(core, db){
 	core.post('/api/user/getByMask', function (req, res){
 		if(!req.body){ return res.send(false) }
 		users.find({_id: new RegExp(req.body.mask + '.+')}).limit(8).toArray(function(err, arr){
-			console.log(arr);
+			res.send(arr);
 		});
 	});
 
 	return socketAPI;
 
 	function socketAPI(socket, user){
+		/*
+		livedb.fetchAndSubscribe('lists', 'fred', function(err, data, stream) {
+			stream.on('data', function(op) {
+				// We'll see all changes to the fred document as they happen
+				console.log('Fred was edited by the operation', op);
+			});
+		});
+		*/
 		socket.on('api:user:update', function(data){
 			console.log(data.email + ' connected');
 			onlineUsers[data.email] = socket;
@@ -42,6 +50,10 @@ module.exports = function(core, db){
 				data: user
 			}
 		};
+
+		db.submit('users', user.email, , function(err, version) {
+		  	console.log('err', err);
+		});
 		db.fetch('users', new RegExp(req.body.mask + '.+'), function(err, snapshot) {
 			console.log('===========================');
 			console.log(snapshot);
