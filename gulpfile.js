@@ -101,11 +101,11 @@ gulp.task('git-check', function(done) {
         }
 
         function server(){
-            gulp.src('.')
+            gulp.src('./www')
                 .pipe(global['server-livereload']({
                       livereload: true,
                       directoryListing: true,
-                      defaultFile: 'index.html',
+                      defaultFile: './index.html',
                       open: true,
                       port: 3333
                 }))

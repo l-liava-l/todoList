@@ -1,41 +1,46 @@
-module.exports = function(core, db, livedb){
+module.exports = function(core, db, Swarm){
 	var lists = db.collection('lists');
-	
-	function clientAPI(client){
 
-	}
-
-	/*
-	*  Создаем новый лист
-	*  @creator - email юзера
-	*  @title - тайтл класса 
-	*  @id - id листа
-	*/
-	core.post('/api/lists/create', function (req, res){
-		if(!req.body.creator || !req.body.title || !req.body.id){
-			return res.send(false);
-		}
-
-		var create = {
-			create: {
-				type: 'json0', 
-				data: req.body
-			}
-		};
-
-		req.body.users = [req.body.creator];
-		req.body.todoes = {};
-
-		livedb.submit('lists', req.body.id, create, function(err) {
-		  	if(!err){res.send(true)}
-		});		
+	var List = Swarm.Model.extend("List", {
+	    defaults: {
+	        title: "",
+	        id: 0,
+	        todoes: {},
+	        creator: ""
+	    }
 	});
 
 	/*
-	*  Добавляем юзера в лист
-	*  @email - email юзера
-	*  @listId - id листа 
+	*  Создаем новый лист
+	* @creator - email пользователя
+	* @title - титл листа
 	*/
+	core.post('/api/lists/create', function (req, res){
+		if(!req.body.creator || !req.body.title){
+			return res.send(false);
+		}
+
+		var id = "L" + Date.now();
+		var list = new List(id); 
+
+		
+		list.set({
+			title: req.body.title,
+			creator: req.body.creator,
+			id: id
+		});
+
+		addList(req.body.creator, id);
+
+		console.log('create list ' + id);
+		res.send(true);
+	});
+
+	function addList(userId, listId){
+		var collection = db.collection('users');
+		collection.update({ _id: userId}, {$push: {lists: listId}})
+	}
+	/*
 	core.post('/api/lists/addUser', function (req, res){
 		if(!req.body.email || !req.body.listId){
 			return res.send(false);
@@ -157,5 +162,6 @@ module.exports = function(core, db, livedb){
 		  callback();
 		});
 	}
+	*/
 }
 

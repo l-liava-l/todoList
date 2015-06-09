@@ -1,11 +1,25 @@
 var bodyParser = require('body-parser');
 var app = require('express')();
 var mongodb = require('mongodb');
+var ws_lib = require('ws');
+var Swarm = require('swarm');
 
 var server = createServer();
 var dbUrl = 'mongodb://localhost:27017/todoList'
 
-mongodb.connect(dbUrl, mongoConnect);  
+mongodb.connect(dbUrl, mongoConnect);
+
+var storage = new Swarm.LevelStorage('lists', {
+    path: '.lists',
+    db: require('leveldown')
+});
+
+storage.open(function(err){
+    if(err){
+        console.log(err);
+    } 
+});
+
 
 //== middlewares
 app.use(bodyParser.urlencoded({
@@ -33,8 +47,19 @@ app.use(bodyParser.json());
 //== declarations
 function mongoConnect(err, db){
 	if(err){ console.log(err) }
+
+	var swarmHost = new Swarm.Host('swarm~nodejs', 0, storage);
+
+	var wsServer = new ws_lib.Server({ server: server });
+
+	wsServer.on('connection', function (ws) {
+	    console.log('new incoming WebSocket connection');
+
+	    swarmHost.accept(new Swarm.EinarosWSStream(ws), { delay: 50 });
+	});
+
 	var usersAPI = new require('./api/users')(app, db);
-	var listsAPI = new require('./api/lists')(app, db);
+	var listsAPI = new require('./api/lists')(app, db, Swarm);
 }
 
 

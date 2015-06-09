@@ -18,7 +18,11 @@
 
         genAPI();
 
-       
+        API.createList({
+            creator: "leggggsddgggg@gmail",
+            title: "list №" + Date.now()
+        });
+
         document.addEventListener("deviceready",()=>
             auth.connect(API.updateUser)
         , false);
@@ -110,7 +114,8 @@
                     email: "leggggsddgggg@gmail",
                     givenName: "LEV",
                     familyName: "legkodymov",
-                    imageUrl: "http://imageUrl"
+                    imageUrl: "http://imageUrl",
+                    lists: ['sdds']
                 }
 
                 return requester.post(waysKnower.updateUser, params)
