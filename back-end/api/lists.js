@@ -1,7 +1,7 @@
 module.exports = function(core, db, livedb){
 	var lists = db.collection('lists');
 	
-	function socketAPI(socket){
+	function clientAPI(client){
 
 	}
 
@@ -72,7 +72,7 @@ module.exports = function(core, db, livedb){
 		});	
 	});
 
-	return socketAPI;
+	return clientAPI;
 
 	
 	

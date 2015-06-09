@@ -31,9 +31,12 @@
     "karma-chrome-launcher": "~0.1.7",
     "karma-jasmine": "~0.3.3",
     "karma-phantomjs-launcher": "~0.1.4",
+    "leveldown": "^1.2.2",
     "main-bower-files": "~2.4.1",
     "mysql": "^2.6.2",
     "path": "~0.4.9",
+    "swarm": "^0.3.25",
+    "ws": "^0.7.2",
     "yargs": "^3.9.0"
   },
   "devDependencies": {

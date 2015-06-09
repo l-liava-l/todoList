@@ -1,5 +1,4 @@
 module.exports = function(core, db){
-	var onlineUsers = {}
 	var users = db.collection('users');
 
 	core.post('/api/user/getByMask', function (req, res){
@@ -9,35 +8,12 @@ module.exports = function(core, db){
 		});
 	});
 
-	return socketAPI;
-
-	function socketAPI(socket, user){
-		/*
-		livedb.fetchAndSubscribe('lists', 'fred', function(err, data, stream) {
-			stream.on('data', function(op) {
-				// We'll see all changes to the fred document as they happen
-				console.log('Fred was edited by the operation', op);
-			});
+	core.post('/api/user/update', function (req, res){
+		if(!req.body){ return res.send(false) }
+		users.update({_id: req.body.email}, req.body, {upsert: true}, function(err, cursor){
+			console.log(req.body.email + ' - updated')
 		});
-		*/
-		socket.on('api:user:update', function(data){
-			console.log(data.email + ' connected');
-			onlineUsers[data.email] = socket;
-			user = data.email;
-			updateUser(data);
-		});
-
-		socket.on('disconnect', function(){
-			console.log(user + ' disconnected');
-			delete onlineUsers[user];
-		});
-	}
-
-	function updateUser(user){
-		users.update({_id: user.email}, user, {upsert: true}, function(err, cursor){
-			//
-		});
-	}
+	});
 } 
 
 
