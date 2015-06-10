@@ -19,7 +19,7 @@
         genAPI();
 
         API.createList({
-            creator: "leggggsddgggg@gmail",
+            creator: "leggggsgg@gmail",
             title: "list №" + Date.now()
         });
 
@@ -111,11 +111,11 @@
         function genAPI(){
             setAPI('updateUser', function(params){
                 params = params && params.email ? params : {
-                    email: "leggggsddgggg@gmail",
+                    email: "leggggsgg@gmail",
                     givenName: "LEV",
                     familyName: "legkodymov",
                     imageUrl: "http://imageUrl",
-                    lists: ['sdds']
+                    lists: []
                 }
 
                 return requester.post(waysKnower.updateUser, params)
@@ -145,8 +145,8 @@
                 requester.post(waysKnower.getTodoListed, params)
             );
 
-            setAPI('getLists', (params)=>
-                requester.post(waysKnower.getLists, params)    //email            
+            setAPI('getLists', ()=>
+                requester.post(waysKnower.getLists, {email: "leggggsgg@gmail"})    //email            
             );
 
             setAPI('createList', (params)=>

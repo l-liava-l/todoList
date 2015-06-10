@@ -24,7 +24,7 @@
 
 		function getLists(params){
 			return $q(function(resolve, reject){
-				core.getLists(onSuccess);
+				core.getLists(null, onSuccess);
 
 				function onSuccess(data){
 					vm.lists = data;

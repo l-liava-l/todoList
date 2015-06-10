@@ -10,11 +10,6 @@ module.exports = function(core, db, Swarm){
 	    }
 	});
 
-	/*
-	*  Создаем новый лист
-	* @creator - email пользователя
-	* @title - титл листа
-	*/
 	core.post('/api/lists/create', function (req, res){
 		if(!req.body.creator || !req.body.title){
 			return res.send(false);
@@ -33,13 +28,32 @@ module.exports = function(core, db, Swarm){
 		addList(req.body.creator, id);
 
 		console.log('create list ' + id);
-		res.send(true);
+
+		function addList(userId, listId){
+			var collection = db.collection('users');
+			collection.update({ _id: userId}, {$push: {lists: listId}}, function(){
+				getLists(userId, res);
+			})
+		}
 	});
 
-	function addList(userId, listId){
-		var collection = db.collection('users');
-		collection.update({ _id: userId}, {$push: {lists: listId}})
+	core.post('/api/lists/get', function (req, res){
+		req.body.email ? getLists(req.body.email, res) : res.send(false);
+	});
+
+	function getLists(email, res){
+		var users = db.collection('users');
+		
+		users.find({_id: email}).toArray(function(err, docs){
+			res.send(docs[0].lists)
+		});
 	}
+}
+
+
+	//TODO сделать апиху получения всех листов.
+
+	
 	/*
 	core.post('/api/lists/addUser', function (req, res){
 		if(!req.body.email || !req.body.listId){
@@ -163,5 +177,5 @@ module.exports = function(core, db, Swarm){
 		});
 	}
 	*/
-}
+
 
