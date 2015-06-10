@@ -22,6 +22,7 @@ module.exports = function(core, db, Swarm){
 		list.set({
 			title: req.body.title,
 			creator: req.body.creator,
+			users: [req.body.creator],
 			id: id
 		});
 
@@ -51,7 +52,6 @@ module.exports = function(core, db, Swarm){
 }
 
 
-	//TODO сделать апиху получения всех листов.
 
 	
 	/*

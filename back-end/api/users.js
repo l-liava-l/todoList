@@ -10,8 +10,10 @@ module.exports = function(core, db){
 
 	core.post('/api/user/update', function (req, res){
 		if(!req.body){ return res.send(false) }
-		users.update({_id: req.body.email}, req.body, {upsert: true}, function(err, cursor){
+
+		users.update({_id: req.body.email}, {$set: req.body}, {upsert: true}, function(err, cursor){
 			console.log(req.body.email + ' - updated')
+			res.send(true);
 		});
 	});
 } 

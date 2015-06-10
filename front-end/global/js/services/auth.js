@@ -12,6 +12,10 @@
     	}
 
     	function connect(onSuccess){
+            if(!window.plugins || !window.plugins.googleplus){
+                return onSuccess(false);
+            }
+
             window.plugins.googleplus.isAvailable(
                 function(available) {
                   if(available) {

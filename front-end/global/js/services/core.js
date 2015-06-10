@@ -7,28 +7,118 @@
     core.$inject = ['requester',  'waysKnower', 'localWriter', '$q', 'auth', '$state'];
 
     function core(requester, waysKnower, localWriter, $q, auth, $state){
-        var API = {};
+        var API = {
+            updateUser: updateUser,
+            getListUsers: getListUsers,
+            addUserToList: addUserToList,
+            getUsers: getUsers,
+            setTodoStatus: setTodoStatus,
+            createTodo: createTodo,
+            getTodoListed: getTodoListed,
+            getLists: getLists,
+            createList: createList
+        };
         
         var swarmHost = new Swarm.Host('client' + Date.now() + "~ssn");
         swarmHost.connect('ws://127.0.0.1:8002/');
 
-
-        console.log(swarmHost);
-
-
-        genAPI();
-
-        API.createList({
-            creator: "leggggsgg@gmail",
-            title: "list №" + Date.now()
-        });
-
-        document.addEventListener("deviceready",()=>
-            auth.connect(API.updateUser)
-        , false);
-      
+        document.addEventListener("deviceready", onDeviceReady, false);
+        onDeviceReady();
+        
+       
+       
+        
 
         return API;
+
+        function onDeviceReady(){
+            console.log('onDeviceReady');
+            auth.connect(API.updateUser(onUserUpdated));
+
+            function onUserUpdated(data){
+                var List = Swarm.Model.extend("List", {
+                    defaults: {
+                        title: "",
+                        id: 0,
+                        todoes: {},
+                    }
+                });
+
+                API.createList({
+                    creator: "leggggsddgggg@gmail",
+                    title: "list №" + Date.now()
+                });
+
+                getLists(API.user.email, onSuccess)
+
+                function onSuccess(listsIds){
+                    console.log(listsIds);
+                } 
+            }
+        }
+
+        function updateUser(onSuccess){
+            return function(params){
+                params = params && params.email ? params : {
+                    email: "leggggsddgggg@gmail",
+                    givenName: "LEV",
+                    familyName: "legkodymov",
+                    imageUrl: "http://imageUrl",
+                    lists: []
+                }
+
+                API.user = params;
+
+                requester.post(waysKnower.updateUser, params)
+                    .then(onSuccess, onError);
+            }
+        }
+
+        function getListUsers(params, onSuccess){
+            requester.post(waysKnower.getListUsers, params)
+                .then(onSuccess, onError);
+        }
+
+        function addUserToList(params, onSuccess){
+            requester.post(waysKnower.addUserToList, params)
+                .then(onSuccess, onError);
+        }
+
+        function getUsers(params, onSuccess){
+            requester.post(waysKnower.getUsers, params)
+                .then(onSuccess, onError);
+        }
+
+        function setTodoStatus(params, onSuccess){
+            requester.post(waysKnower.setTodoStatus, params)
+                .then(onSuccess, onError);
+        }
+
+        function createTodo(params, onSuccess){
+            requester.post(waysKnower.createTodo, params)
+                .then(onSuccess, onError);
+        }
+
+        function getTodoListed(params, onSuccess){
+            requester.post(waysKnower.getTodoListed, params)
+                .then(onSuccess, onError);
+        }
+
+        function getLists(email, onSuccess){
+            requester.post(waysKnower.getLists, {email: email})
+                .then(onSuccess, onError);
+        }
+
+        function createList(params, onSuccess){
+            requester.post(waysKnower.createList, params)
+                .then(onSuccess, onError);   
+        }
+
+        function onError(msg){
+            console.log('req errored:', msg);
+        }
+    }
+})();
 
         /*
         sharejs.client.open('lists', '1433606385077', 'http://localhost:8002/channel', function(error, doc) {
@@ -107,63 +197,3 @@
 */
 
        
-
-        function genAPI(){
-            setAPI('updateUser', function(params){
-                params = params && params.email ? params : {
-                    email: "leggggsgg@gmail",
-                    givenName: "LEV",
-                    familyName: "legkodymov",
-                    imageUrl: "http://imageUrl",
-                    lists: []
-                }
-
-                return requester.post(waysKnower.updateUser, params)
-            });
-
-            setAPI('getListUsers', (params)=>
-                requester.post(waysKnower.getListUsers, params)
-            );
-
-            setAPI('addUserToList', (params)=>
-                requester.post(waysKnower.addUserToList, params)
-            );
-
-            setAPI('getUsers', (params)=>
-                requester.post(waysKnower.getUsers, params)
-            );
-
-            setAPI('setTodoStatus', (params)=>
-                requester.post(waysKnower.setTodoStatus, params)
-            );
-
-            setAPI('createTodo', (params)=>
-                requester.post(waysKnower.createTodo, params)
-            );
-
-            setAPI('getTodoListed', (params)=>
-                requester.post(waysKnower.getTodoListed, params)
-            );
-
-            setAPI('getLists', ()=>
-                requester.post(waysKnower.getLists, {email: "leggggsgg@gmail"})    //email            
-            );
-
-            setAPI('createList', (params)=>
-                requester.post(waysKnower.createList, params)   
-            );
-
-            API.updateUser();
-        }
-
-        function onError(msg){
-            console.log('req errored:', msg);
-        }
-
-        function setAPI(name, req){
-            API[name] = function(params, onSuccess){
-                req(params).then(onSuccess, onError);
-            }
-        }
-    }
-})();
