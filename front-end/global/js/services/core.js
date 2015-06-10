@@ -16,8 +16,10 @@
             createTodo: createTodo,
             getTodoListed: getTodoListed,
             getLists: getLists,
-            createList: createList
+            createList: createList,
+            lists: []
         };
+
         
         var swarmHost = new Swarm.Host('client' + Date.now() + "~ssn");
         swarmHost.connect('ws://127.0.0.1:8002/');
@@ -25,10 +27,6 @@
         document.addEventListener("deviceready", onDeviceReady, false);
         onDeviceReady();
         
-       
-       
-        
-
         return API;
 
         function onDeviceReady(){
@@ -52,7 +50,12 @@
                 getLists(API.user.email, onSuccess)
 
                 function onSuccess(listsIds){
-                    console.log(listsIds);
+                    listsIds.forEach(function(id){
+                        var list = new List(id);
+                        list.on('init', function(){
+                            API.lists.push(list);
+                        });
+                    });
                 } 
             }
         }
